@@ -10,13 +10,17 @@ M = cv2.getPerspectiveTransform(pts1, pts2)
 dst = cv2.warpPerspective(img, M, (1200,1200))
 mid_result = cv2.resize(dst, dsize=(0,0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
 
+# 잔 내용물 없애기
+blur = cv2.GaussianBlur(mid_result,(5,5),0)
+
+
 # 이름 정확도 올리기
-canny = cv2.Canny(mid_result, 89, 90)
+canny = cv2.Canny(blur, 90, 100)
 ret, thresh = cv2.threshold(canny, 127, 255, 0)
 c, h = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-result = cv2.drawContours(mid_result, c, -1, (0,255,0), 3)
+result = cv2.drawContours(blur, c, -1, (0,255,0), 3)
 
-plt.subplot(121),plt.imshow(mid_result),plt.title('mid_result')
+plt.subplot(121),plt.imshow(blur),plt.title('mid_result')
 plt.subplot(122),plt.imshow(result),plt.title('result')
 plt.show()
